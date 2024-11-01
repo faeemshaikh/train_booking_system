@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+// Package for the train booking system API.
+package proto;
+
+// Go package path for generating Go code.
+// Move the generated files to proto directory after compiling proto file
+option go_package = "github.com/faeemshaikh/train_booking_system/proto";
+
+
+service TrainService {
+  // Allows a user to purchase a ticket, assigning them a section and seat.
+  rpc PurchaseTicket (PurchaseRequest) returns (PurchaseResponse);
+
+  // Retrieves the receipt details based on a specific ticket ID.
+  rpc GetReceipt (ReceiptRequest) returns (ReceiptResponse);
+
+  // Views all seats and their allocations within a specified section.
+  rpc ViewSeats (ViewSeatRequest) returns (ViewSeatResponse);
+
+  // Removes a user from the booking system based on their ticket ID.
+  rpc RemoveUser (RemoveUserRequest) returns (RemoveUserResponse);
+
+  // Modifies the seat assignment for an existing ticket.
+  rpc ModifySeat (ModifySeatRequest) returns (ModifySeatResponse);
+}
+
+// PurchaseRequest is used to buy a train ticket.
+message PurchaseRequest {
+  string first_name = 1; // User's first name.
+  string last_name = 2;  // User's last name.
+  string email = 3;      // User's email address for ticket confirmation.
+  string from = 4;       // Departure location of the trip.
+  string to = 5;         // Destination location of the trip.
+}
+
+// PurchaseResponse confirms the purchase of a train ticket.
+message PurchaseResponse {
+  string message = 1;    // Confirmation message for the user.
+  string ticket_id = 2;  // Unique ID generated for the purchased ticket.
+}
+
+// ReceiptRequest asks for a receipt based on a given ticket ID.
+message ReceiptRequest {
+  string ticket_id = 1; // The unique ticket ID to retrive receipt.
+}
+
+// ReceiptResponse provides the details of a purchased ticket.
+message ReceiptResponse {
+  string ticket_id = 1;   // Unique ID for the purchased ticket.
+  string from = 2;        // Starting point of the trip.
+  string to = 3;          // Destination point of the trip.
+  string user = 4;        // Full name of the ticket holder.
+  double price = 5;       // Price paid for the ticket.
+  string section = 6;     // Section where the seat is allocated (e.g., A or B).
+  int32 seat = 7;         // Seat number allocated to the user.
+}
+
+message ViewSeatRequest {
+  string section = 1; // The section for which seats are requested (e.g., A or B).
+}
+
+message ViewSeatResponse {
+  repeated SeatAllocation seats = 1; // List of users and their seats in a section.
+}
+
+message SeatAllocation {
+  string user = 1; // Full name of the user holding the seat.
+  int32 seat = 2;  // Seat number assigned to the user.
+}
+
+message RemoveUserRequest {
+  string ticket_id = 1; // Unique ticket ID to identify the user to remove.
+}
+
+message RemoveUserResponse {
+  string message = 1; // Confirmation message of successful removal.
+}
+
+message ModifySeatRequest {
+  string ticket_id = 1; // Unique ticket ID to identify the user.
+  string section = 2;   // New section to assign the seat.
+  int32 seat = 3;       // New seat number within the section.
+}
+
+message ModifySeatResponse {
+  string message = 1;         // Confirmation message for the seat modification.
+  string previous_section = 2; // Previous section before modification.
+  int32 previous_seat = 3;    // Previous seat number before modification.
+  string updated_section = 4; // Updated section after modification.
+  int32 updated_seat = 5;     // Updated seat number after modification.
+}
