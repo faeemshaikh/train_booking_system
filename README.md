@@ -1,38 +1,46 @@
-Train Booking System
-This is a gRPC-based train booking system implemented in Golang. The system allows users to purchase train tickets, view receipts, allocate seats, and manage users and seats in real-time. All data is stored in memory, making it lightweight and suitable for local testing. 
+# Train Ticket Booking System
 
-There are two sections "A" and "B" in the train with max capacity of 10 each. The ticket price is hard coded to $20. These values should be fetched from persitance layer, but as a part of assignment I have hard coded them.
+This is a gRPC-based train booking system implemented in Golang. The system allows users to purchase train tickets, view receipts, allocate seats, and manage users and seats in real-time. All data is stored in memory, making it lightweight and suitable for local testing.
 
-Features
-Ticket Purchase: Users can purchase a ticket with their details and are automatically allocated a seat in either section A or B. The ticket Id is randomly generated
-Receipt Viewing: Users can view their ticket details, including route, section, seat, and price.
-Seat Management: View all seat allocations within a section, modify seat allocations, and remove users.
-In-memory Storage: All data is stored in memory and no persistance layer added yet.
+There are two sections, **"A"** and **"B"**, in the train, each with a maximum capacity of 10 seats. The ticket price is hard-coded to $20. These values should ideally be fetched from a persistence layer, but for this assignment, they are hard-coded.
 
-API Overview
-1. PurchaseTicket
-Purchases a ticket, assigning the user to a seat in either section A or B, based on availability.
-Parameters: User details (first name, last name, email), route information (from, to, price etc.).
-Response: Confirmation message, ticket ID, assigned section, and seat number.
-2. GetReceipt
-Retrieves ticket details for a given ticket ID. (ticket id is randomaly generated when purchase happens)
-Parameters: ticket_id.
-Response: Ticket details, including route, price, section, and seat.
-3. ViewSeats
-Shows seat allocations for a specified section (either A or B).
-Parameters: Section identifier.
-Response: List of seats and assigned users in the specified section.
-4. RemoveUser
-Removes a user based on their ticket ID.
-Parameters: ticket_id.
-Response: Confirmation message indicating successful removal.
-5. ModifySeat
-Modifies the seat assignment for an existing ticket only if requested seat is available
-Parameters: ticket_id, section, seat.
-Response: Confirmation message, previous seat details, and updated seat details.
+## Features
 
+- **Ticket Purchase**: Users can purchase a ticket with their details and are automatically allocated a seat in either section A or B. The ticket ID is randomly generated.
+- **Receipt Viewing**: Users can view their ticket details, including route, section, seat, and price.
+- **Seat Management**: View all seat allocations within a section, modify seat allocations, and remove users.
+- **In-memory Storage**: All data is stored in memory, no persistence layer has been added yet.
 
-Project Structure
+## API Overview
+
+1. **PurchaseTicket**
+   - **Description**: Purchases a ticket, assigning the user to a seat in either section A or B, based on availability.
+   - **Parameters**: User details (first name, last name, email), route information (from, to, price, etc.).
+   - **Response**: Confirmation message, ticket ID, assigned section, and seat number.
+
+2. **GetReceipt**
+   - **Description**: Retrieves ticket details for a given ticket ID. (Ticket ID is randomly generated when purchase happens.)
+   - **Parameters**: `ticket_id`.
+   - **Response**: Ticket details, including route, price, section, and seat.
+
+3. **ViewSeats**
+   - **Description**: Shows seat allocations for a specified section (either A or B).
+   - **Parameters**: Section identifier.
+   - **Response**: List of seats and assigned users in the specified section.
+
+4. **RemoveUser**
+   - **Description**: Removes a user based on their ticket ID.
+   - **Parameters**: `ticket_id`.
+   - **Response**: Confirmation message indicating successful removal.
+
+5. **ModifySeat**
+   - **Description**: Modifies the seat assignment for an existing ticket only if the requested seat is available.
+   - **Parameters**: `ticket_id`, `section`, `seat`.
+   - **Response**: Confirmation message, previous seat details, and updated seat details.
+
+## Project Structure
+
+```plaintext
 .
 ├── README.md                   # Project description and setup
 ├── client/
@@ -44,35 +52,44 @@ Project Structure
 │   ├── train.pb.go             # Generated Protobuf Go code
 │   └── train_grpc.pb.go        # Generated gRPC Go code
 └── server/
-    └── server.go               # gRPC server with train booking logic
+    ├── server.go               # gRPC server with train booking logic
     └── server_test.go          # Unit tests for server functionality
+```
 
-Prerequisites
-Go
-protoc
-gRPC and Protobuf Go plugins
+## Prerequisites
+1. Go
+2. protoc
+3. gRPC and Protobuf Go plugins
 
-Setup and Running
-1. If any changes are made to proto/train.proto, regenerate the Go code:
-protoc --go_out=. --go-grpc_out=. proto/train.proto
+
+## Setup and Running
+1. Generate gRPC Code
+    If any changes are made to proto/train.proto, regenerate the Go code with:
+    ```
+    protoc --go_out=. --go-grpc_out=. proto/train.proto
+    ```
 2. Run the Server
-Start the gRPC server to listen on port 50051: go run server/server.go
+    ```
+    go run server/server.go
+    ```
 3. Run the Client
-go run client/client.go
+    ```
+    go run client/client.go
+    ```
 
-
-Example Commands in client.go
+## Example Commands in client.go
 Add commands in client/client.go to test various APIs. Examples:
+1. Purchase Ticket: Buy a ticket and allocate a seat.
+2. View Receipt: Fetch receipt details by ticket_id.
+3. View Seats: Check seat allocations in sections A and B.
+4. Remove User: Remove a user from the train by ticket_id.
+5. Modify Seat: Change a user’s seat allocation.
 
-Purchase Ticket: Buy a ticket and allocate a seat.
-View Receipt: Fetch receipt details by ticket_id.
-View Seats: Check seat allocations in sections A and B.
-Remove User: Remove a user from the train by ticket_id.
-Modify Seat: Change a user’s seat allocation.
-
-Testing
+## Testing
 Running Tests
-The server_test.go file contains tests for all primary functionality, including ticket purchase, seat viewing, seat modification, and user removal. Run the tests with:
+```
 go test ./server
+```
 
-Test Coverage : 82%
+## Test Coverage
+The latest code has a test coverage of approximately 82%.
